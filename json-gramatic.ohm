@@ -1,67 +1,63 @@
 Gramatic {
-	json 
-	= elements
+  json = element
 
-	value
-	= object | array | string | number | "true" | "false" | "null"
+  elements = element "," elements --multipleElements
+           | element 
 
-	object
-	= '{' ws '}' | '{' members '}'
+  element = ws value ws
 
-	members
-	= member | member ',' members
+  value = object  
+        | array   
+        | string  
+        | number  
+        | "true"  
+        | "false" 
+        | "null"
+    
+	object = "{" ws "}"  --space
+         | "{" members "}" --members
 
-	member
-	= ws string ws ':' element
+	members = member "," members --multipleMembers
+          | member 
 
-	array
-	= '[' ws ']' | '[' elements ']'
+	member = ws string ws ":" element
 
-	elements
-	= element | element ',' elements
+  array = "[" ws "]" --space
+        | "[" elements "]" --elements
+  
+  string = "\"" characters* "\""
 
-	element
-	= ws value ws
+	characters = ~("\"" | "\\") any --nonEscaped
+             | "\\" escape --escape
 
-	string
-	= '"' characters '"'
+	escape = "\"" --quote
+         | "\\" --backslash
+         | "/"  --slash
+         | "b"  --backspace
+         | "f"  --formfeed
+         | "n"  --newLine
+         | "r"  --return
+         | "t"  --tab
+         | "u" hexDigit hexDigit hexDigit hexDigit --unicode
 
-	characters
-	= "" | character characters
+  number = integer fraction exponent
 
-	character
-	= '0020' . '10FFF'-'"'-'\' | '\' escape
+	integer = digits --digits
+          | "-" digits  --negativeNumber
 
-	escape
-	= '"' | '\' | '/' | 'b' | 'f' | 'n' | 'r' | 't' | 'u' hex hex hex hex
+  digits = digit+
 
-	hex
-	= digit | 'A'.'F' | 'a'.'f'
+	fraction	= "." digits --decimal
+            | "" --empty
 
-	number
-	= integer fraction exponent
+	exponent  = "" --empty
+            | "E" sign digits  --upper
+            | "e" sign digits   --lower
+ 
+  sign = "" | "+" | "-"
 
-	integer
-	= digit | onenine digits | '-' digit | '-' onenine digits
-
-	digits
-	= digit | digit digits
-
-	digit
-	= '0' | onenine
-
-	onenine
-	= '1'.'9'
-
-	fraction
-	= "" | '.' digits
-
-	exponent
-	= "" | 'E' sign digits | 'e' sign digits
-
-	sign
-	= "" | '+' | '-'
-
-	ws
-	= "" | '0020' ws | '000A' ws | '000D' ws | '0009' ws
+  ws = " "* ws --space
+     | "\n"* ws --newLine
+     | "	"* --indent
+     | "" --empty
 }
