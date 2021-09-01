@@ -184,12 +184,16 @@ semantic.addOperation('execute', {
   }
 })
 
-
+const tree = semantic(result);
 const result = myGrammar.match(userInput);
 if (result.succeeded()) {
   console.log('Entrada válida');
-  const tree = semantic(result).execute();
-  console.log(tree)
+  tree.execute();
+  console.log(tree);
+  fs.writeFile('struct_from_json.c', tree, function (err) {
+    if (err) throw err;
+    console.log('Arquivo convertido com sucesso.');
+  });
 } else {
   console.log(result.message);
   console.log("Entrada inválida!");
