@@ -10,8 +10,7 @@ Gramatic {
         | array   
         | string  
         | number  
-        | "true"  
-        | "false" 
+        | boolean  
         | "null"
     
 	object = "{" ws "}"  --space
@@ -27,8 +26,8 @@ Gramatic {
   
   string = "\"" characters* "\""
 
-	characters = ~("\"" | "\\") any --nonEscaped
-             | "\\" escape --escape
+	characters = "\\" escape --escape 
+             | ~("\"" | "\\") any --nonEscaped
 
 	escape = "\"" --quote
          | "\\" --backslash
@@ -55,6 +54,8 @@ Gramatic {
             | "e" sign digits   --lower
  
   sign = "" | "+" | "-"
+
+  boolean = "true" | "false"
 
   ws = " "* ws --space
      | "\n"* ws --newLine

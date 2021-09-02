@@ -18,11 +18,14 @@ const userInput = fs.readFileSync('./input.txt', 'utf8' , (err, data) => {
 
 //values = {"Luis Gama", 32, "advogado"};
 const values = [];
+const objects = [];
+const isObject = new RegExp("{*}");
 
 semantic.addOperation('execute', {
   json(element){
-    return "struct JSON \n" + element.execute()
-     + " values = {" + values + "};";
+    const json = element.execute();
+    return objects.join("") + "struct JSON \n" + json 
+     + " values = { " + values + " };";
   },
 
   elements(element){
@@ -36,9 +39,7 @@ semantic.addOperation('execute', {
   },
 
   element(leftSpace, value, rightSpace){
-    return leftSpace.execute() +
-    value.execute() +
-    rightSpace.execute();
+    return leftSpace.execute() + value.execute()
   },
 
   object_space(leftBrace, space, rightBrace){
@@ -65,14 +66,25 @@ semantic.addOperation('execute', {
   },
 
   member(leftSpace, string, rightSpace, colon, element){
-    values.push(element.sourceString.normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
-    //leftSpace.execute()
-    //rightSpace.execute()
-    //colon.execute();
-    //element.execute();
-    return string.sourceString.replace(/['"]+/g, '').normalize("NFD").replace(/[\u0300-\u036f]/g, "") + ";";
     
+    if(!isObject.test(element.sourceString)){
+      values.push(element.sourceString.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim());
+    }
 
+    const variable = string.sourceString.replace(/['"]+/g, '').replace(/[" "]+/g,'_').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    
+    const type = element.execute();
+
+    if(type.includes("char[")){
+      return " char " + variable + type.replace("char", "").trim() + ";"
+    }
+    else if(isObject.test(type)){
+      objects.push("struct " + variable + "\n" + type.trim() + ";\n\n");
+      return "struct " + variable + " " + variable + ";";
+    }
+    else{
+    return  type + variable + ";"
+    }
   },
 
   array_space(leftBracket, space, rightBracket){
@@ -82,15 +94,14 @@ semantic.addOperation('execute', {
   },
 
   array_elements(leftBracket, elements, rightBracket){
+    elements.execute()
     return leftBracket.execute() +
-    elements.execute() +
     rightBracket.execute();
   },
 
   string(leftQuote, characters, rightQuote){
-    return leftQuote.execute() +
-    characters.sourceString +
-    rightQuote.execute();
+    const length = characters.numChildren + 1;
+    return "char[" + length + "] ";
   },
 
   characters_nonEscaped(character){
@@ -136,9 +147,15 @@ semantic.addOperation('execute', {
   },
 
   number(integer, fraction, exponent){
-    return integer.execute() +
-    fraction.execute() +
-    exponent.execute();
+    if(integer.execute()){
+      if(fraction.execute()){
+        return "float "
+      }
+      return "int "
+    }
+    // return integer.execute() +
+    // fraction.execute() +
+    // exponent.execute();
   },
 
   integer_digits(digits){
@@ -170,6 +187,10 @@ semantic.addOperation('execute', {
   },
   exponent_lower(e, sign, digits){
     return e.execute(), + sign.execute() + digits.execute();
+  },
+
+  boolean(bool){
+    return "bool ";
   },
 
   sign(_){
