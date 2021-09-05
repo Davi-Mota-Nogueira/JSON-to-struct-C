@@ -30,14 +30,14 @@ Explique a sintaxe da linguagem e o significado dos elementos
 sintáticos
 
 
-IV) Exemplos de Códigos Fontes
+## IV) Exemplos de Códigos Fontes
 
 
 Muitos exemplos de programas que ilustrem as 
 características da linguagems
 
 
-V) Comportamento do Compilador
+## V) Comportamento do Compilador
 
 
 Que ações o compilador deve executar quando os Exemplos mostrados forem processados. É importante que os exemplos e o comportamento mostrem o quão
@@ -45,7 +45,7 @@ melhor é usar a sua linguagem proposta do que codificar diretamente em uma
 Linguagem tradicional
 
 
-VI) Manual
+## VI) Manual
 
 
 Como utilizar a implementação para rodar os exemplos do Capítulo IV
