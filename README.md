@@ -43,7 +43,7 @@ Na imagem percebe-se que é possível identificar que o objeto começa e termina
 
 Alguns exemplos de códigos fontes que a linguagem suporta são:
 
-```javascript
+```json
 {
     "nome": "Luis Gama",
     "idade": 32, 
@@ -63,7 +63,7 @@ Alguns exemplos de códigos fontes que a linguagem suporta são:
   }
 }
 ```
-```javascript
+```json
 {
    "min_position": 8,
    "has_more_items": false,
@@ -75,7 +75,7 @@ Alguns exemplos de códigos fontes que a linguagem suporta são:
    }
 }
 ```
-```javascript
+```json
 {
    "data": {
       "name": "Luis",
@@ -90,7 +90,7 @@ Alguns exemplos de códigos fontes que a linguagem suporta são:
    }
 }
 ```
-```javascript
+```json
 {
 "name":"John",
 "age":30,
@@ -98,10 +98,7 @@ Alguns exemplos de códigos fontes que a linguagem suporta são:
 "cars":["Ford", "BMW", "Fiat"]
 }
 ```
-```javascript
-
-```
-```javascript
+```json
 {
     "random": 32,
     "random float": 66.648,
@@ -135,7 +132,7 @@ Alguns exemplos de códigos fontes que a linguagem suporta são:
 A nossa linguagem já facilita o trabalho manual de traduzir todo o objeto JSON para uma Struct em C, há casos que são muitos dados para serem traduzidos, e o trabalho envolvido é muito grande, pois diferente da sintaxe de JSON, onde há uma "string" : value, a Struct funciona de maneira inversa, colocando o tipo da variável primeiro, depois o nome da variável, e por final é adicionado o valor da variável. Com a nossa linguagem englobando todas as possibilidades que ocorrem no objeto JSON, e interpretando na árvore semântica, irá automatizar esse trabalho, poupando horas de trabalho de conversão de uma linguagem para outra.
 No exemplo a seguir há uma estrutura em JSON:
 
-```javascript
+```json
 {
    "min_position": 8,
    "has_more_items": false,
@@ -170,7 +167,7 @@ Percebe-se também que quando há um objeto dentro da estrutura, é preciso faze
 A linguagem tem limitações ainda, ela tem problemas com o Array e null, ela não consegue identificar Array de Objetos e Array de Arrays junta todos os Arrays em um só.
 
 Array de Array em JSON:
-```javascript
+```json
 {
   "pontos":[
     [10,20,30,40],
