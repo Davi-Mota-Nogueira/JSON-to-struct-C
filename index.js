@@ -2,13 +2,13 @@
 const fs = require('fs');
 const ohm = require('ohm-js');
 
-const contents = fs.readFileSync('gramatic.ohm');
+const contents = fs.readFileSync('json-gramatic.ohm');
 
 const myGrammar = ohm.grammar(contents);
 
 const semantic = myGrammar.createSemantics();
 
-const userInput = fs.readFileSync('./input.txt', 'utf8' , (err, data) => {
+const userInput = fs.readFileSync('./input.json', 'utf8' , (err, data) => {
     if (err) {
       console.error(err)
       return
@@ -16,10 +16,10 @@ const userInput = fs.readFileSync('./input.txt', 'utf8' , (err, data) => {
     return data
 });
 
-//values = {"Luis Gama", 32, "advogado"};
 const values = [];
 const objects = [];
 const isObject = new RegExp("{*}");
+const isArray = new RegExp("\\[*\\]");
 
 semantic.addOperation('execute', {
   json(element){
@@ -66,9 +66,28 @@ semantic.addOperation('execute', {
   },
 
   member(leftSpace, string, rightSpace, colon, element){
-    
     if(!isObject.test(element.sourceString)){
-      values.push(element.sourceString.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim());
+      if(isArray.test(element.sourceString)){
+        const arr = element.sourceString.replace(/[\[\]']+/g,'').replace(/\s/g, "");
+
+        if(arr === ""){
+          values.push("\"\"");
+        }
+        else{
+          arrr =  arr.split(",")
+          arrr.forEach(
+            (str, index) => {
+              if(!str.includes("\"")){
+                arrr[index] = "\"" + str + "\""
+              }
+            }
+          )
+          values.push(arrr)
+        }
+      }
+      else{
+      values.push(element.sourceString.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim());        
+      }
     }
 
     const variable = string.sourceString.replace(/['"]+/g, '').replace(/[" "]+/g,'_').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -88,15 +107,14 @@ semantic.addOperation('execute', {
   },
 
   array_space(leftBracket, space, rightBracket){
-    return leftBracket.execute() +
-    space.execute() +
-    rightBracket.execute();
+    return "char[1] "
   },
 
   array_elements(leftBracket, elements, rightBracket){
-    elements.execute()
-    return leftBracket.execute() +
-    rightBracket.execute();
+    const max_length = elements.sourceString.replace(/\s/g, "").split(",").sort((a, b) => b.length - a.length)[0].length;
+
+    const length = elements.sourceString.replace(/\s/g, "").split(",").length;
+    return "char[" + length + "]" + "[" + max_length + "]";
   },
 
   string(leftQuote, characters, rightQuote){
@@ -208,10 +226,17 @@ semantic.addOperation('execute', {
 
 const result = myGrammar.match(userInput);
 if (result.succeeded()) {
-  console.log('Entrada válida');
+  console.log('Input is Valid');
   const tree = semantic(result).execute();
   console.log(tree)
+  
+
+fs.writeFile('output.c', tree, function (err) {
+  if (err) throw err;
+  console.log('File is created successfully.');
+});
+
 } else {
   console.log(result.message);
-  console.log("Entrada inválida!");
+  console.log("Input is Invalid");
 }

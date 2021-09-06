@@ -10,7 +10,7 @@
 Foi utilizado a linguagem JavaScript junto da biblioteca ohm.js
 A linguagem é chamada de JStruct C.
 
-Link para o projeto no [repl.it](https://replit.com/@AltheusV/Projeto)
+Link para o projeto no [repl.it](https://replit.com/@AltheusV/JSON-to-struct-C)
 
 ## II) Motivação
 
