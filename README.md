@@ -42,6 +42,7 @@ características da linguagems
 ## V) Comportamento do Compilador
 
 A nossa linguagem já facilita o trabalho manual de traduzir todo o objeto JSON para uma Struct em C, há casos que são muitos dados para serem traduzidos, e o trabalho envolvido é muito grande, pois diferente da sintaxe de JSON, onde há uma "string" : value, a Struct funciona de maneira inversa, colocando o tipo da variável primeiro, depois o nome da variável, e por final é adicionado o valor da variável. Com a nossa linguagem englobando todas as possibilidades que ocorrem no objeto JSON, e interpretando na árvore semântica, irá automatizar esse trabalho, poupando horas de trabalho de conversão de uma linguagem para outra.
+A linguagem tem limitações ainda, ela não consegue identificar Array de Objetos e Array de Arrays, mas os outros tipos consegue identificar.
 Que ações o compilador deve executar quando os Exemplos mostrados forem processados. É importante que os exemplos e o comportamento mostrem o quão
 melhor é usar a sua linguagem proposta do que codificar diretamente em uma
 Linguagem tradicional
